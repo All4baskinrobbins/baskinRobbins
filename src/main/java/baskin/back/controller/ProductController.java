@@ -34,12 +34,21 @@ public class ProductController {
         return ResponseEntity.ok().body(result);
     }
     
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findById(@PathVariable Long id) {
         ProductDTO product = productService.findById(id);
         Map<String, Object> result = new HashMap<>();
         result.put("statusCode","200");
         result.put("data", product);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("category/{category_id}")
+    public ResponseEntity<Map<String, Object>> findByCategoryId(@PathVariable Long category_id){
+        List<ProductDTO> productList = productService.findByCategoryId(category_id);
+        Map<String, Object> result = new HashMap<>();
+        result.put("statusCode", "200");
+        result.put("data", productList);
         return ResponseEntity.ok().body(result);
     }
 
@@ -52,14 +61,16 @@ public class ProductController {
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("")
-    public ResponseEntity<Map<String, Object>> findById(@RequestParam("name")String name){
-        List<ProductDTO> productList = productService.findByName(name);
-        Map<String, Object> result = new HashMap<>();
-        result.put("statusCode", "200");
-        result.put("data", productList);
-        return ResponseEntity.ok().body(result);
-    }
+//    @GetMapping("")
+//    public ResponseEntity<Map<String, Object>> findById(@RequestParam("name")String name){
+//        List<ProductDTO> productList = productService.findByName(name);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("statusCode", "200");
+//        result.put("data", productList);
+//        return ResponseEntity.ok().body(result);
+//    }
+
+
 
     @CrossOrigin("*")
     @PostMapping("filter")

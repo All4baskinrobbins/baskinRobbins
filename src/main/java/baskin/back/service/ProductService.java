@@ -54,6 +54,14 @@ public class ProductService {
         return productList;
     }
 
+    public List<ProductDTO> findByCategoryId(Long category_id){
+        List<ProductDTO> productList = productMapper.findByCategoryId(category_id);
+        if(productList.isEmpty()) {
+            throw new CustomException(InvalidParameter);
+        }
+        return productList;
+    }
+
     public List<ProductFilterDTO> findProductByFilter(HashMap param) {
         List<ProductFilterDTO> productList = productFilterMapper.findProductByFilter(param);
         if (param.get("allergy") != null) {

@@ -41,6 +41,50 @@
         ORDER BY product.id
     </select>
 
+    <select id="findByCategoryId" resultType="baskin.back.DTO.ProductDTO">
+        SELECT
+            product.id,
+            product.name,
+            product.en_name,
+            category.category_name,
+            product.description,
+            product.kcal,
+            product.salt,
+            product.sugar,
+            product.fat,
+            product.protein,
+            product.caffeine,
+            product.img_url,
+            tag.tag_name,
+            allergy.allergy_name
+        FROM
+            product
+                LEFT JOIN category ON product.category_id = category.id
+                LEFT JOIN (SELECT
+                               product.id AS id,
+                               array_agg(allergy.allergy_name) AS allergy_name
+                           FROM
+                               product
+                                   LEFT JOIN productallergy ON product.id = productallergy.product_id
+                                   LEFT JOIN allergy ON productallergy.allergy_id = allergy.id
+                           GROUP BY product.id) as allergy ON product.id = allergy.id
+                LEFT JOIN (SELECT
+                               product.id AS id,
+                               array_agg(tag.tag_name) AS tag_name
+                           FROM
+                               product
+                                   LEFT JOIN producttag ON product.id = producttag.product_id
+                                   LEFT JOIN tag ON producttag.tag_id = tag.id
+                           GROUP BY product.id) as tag ON product.id = tag.id
+
+        <where>
+            <if test = "category_id != null">
+                AND category_id = #{category_id}
+            </if>
+        </where>
+        ORDER BY product.id
+    </select>
+
     <select id="findById" resultType="baskin.back.DTO.ProductDTO">
         SELECT
             product.id,

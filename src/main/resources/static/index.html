@@ -44,13 +44,6 @@
             //유저 로그인 세션값 유뮤에 따라 상단바 메뉴가 달라집니다. 
             $('#userMenu').hide();
             $('#adminSessionView').hide();
-            
-
-            // 여기서 세션값 유무를 판단해줄거예요
-
-            // // 테스트용 세션
-            // var userIdSession = 'aaa';
-            // localStorage.setItem('sessionIdTest', userIdSession);
 
             // 실제 세션
             if(localStorage.getItem("userid") != null){
@@ -81,11 +74,6 @@
             }); 
 
         });
-
-
-        
-
-
 
 	</script>
 </head>
@@ -158,21 +146,21 @@
 
                                     <!-- 여기서 if문으로 userIdSession값 유무에따라 다른 버튼을 보여줄거예요 -->
                                     <div id="noSessionView" style="margin-right: 50px;">
-                                        <ul class="navbar-nav ml-auto" id="nav" style="display: none;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
                                             <li><a href="login.html">Login</a></li>
                                             <li><a href="join.html">Join</a></li>
                                         </ul>
                                     </div>
 
                                     <div id="adminSessionView" style="margin-right: 50px;">
-                                        <ul class="navbar-nav ml-auto" id="nav" style="display: none;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
                                             <li><a href="logout.html">Logout</a></li>
                                             <li><a href="userInfo.html">관리자 메뉴</a></li>
                                         </ul>
                                     </div>
 
                                     <div id="userMenu" style="margin-right: 50px;">
-                                        <ul class="navbar-nav ml-auto" id="nav" style="display: none;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
                                             <li><a href="#">MyPage</a>
                                                 <ul>
                                                     <li><a href="update.html">회원 정보 수정</a></li>

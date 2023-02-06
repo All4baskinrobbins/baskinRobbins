@@ -13,6 +13,8 @@ import java.util.List;
 @Component
 public interface ProductMapper {
     List<ProductDTO> findAll();
+
+    List<ProductDTO> findByCategoryId(Long category_id);
     List<ProductDTO> findByName(String name);
 
     ProductDTO findById(Long id);
