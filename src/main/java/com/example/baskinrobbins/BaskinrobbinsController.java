@@ -2,14 +2,19 @@ package com.example.baskinrobbins;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
     @Controller
     public class BaskinrobbinsController {
 
-        // @GetMapping("home")
-        // public String home() {
-        //     return "Hello";
-        // }
+        Logger logger = LoggerFactory.getLogger(this.getClass()); 
+	
+	
+        @RequestMapping("/join.do")
+        public String goJoin() throws Exception {
+            return "join";
+        }
 
         @RequestMapping("/")
         public String goIndex(){
@@ -19,6 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
         @RequestMapping("/login")
         public String goLogin(){
             return "login.html";
+        }
+
+        @RequestMapping("/qusetion")
+        public String goQuestion(){
+            return "customerQuestion.html";
         }
         
         

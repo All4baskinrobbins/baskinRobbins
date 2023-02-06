@@ -3,6 +3,50 @@
 
 <head>
 
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+    <!-- 로그인 에이젝스 통신 ajax -->
+    <script>
+        $(document).ready(function () {
+
+        $("#loginButton").click(function(){
+
+            var userIdSession =  $("#inputId").val();
+            localStorage.setItem('sessionId', userIdSession);
+
+            var loginData = {
+
+                    user_id : $("#inputId").val(),
+                    user_pw : $("#inputPw").val()
+            
+                }
+
+            // ajax 통신
+            $.ajax({
+                type : "POST",         
+                url : 'http://192.168.0.29:8080/users/login',
+                data : JSON.stringify(loginData),
+                contentType : "application/json",       
+                dataType : "JSON", 
+                asynv :true,
+                success : function(res){ 
+                    
+                    alert(localStorage.getItem('sessionId')+'님 환영합니다!');
+                    location.href = "index.html";
+                    
+                },
+                error : function(err){ 
+                    alert(err)
+                }
+            });
+
+        });
+            
+    })
+    </script>
+
     <!-- metas -->
     <meta charset="utf-8">
     <meta name="author" content="Chitrakoot Web" />
@@ -199,14 +243,15 @@
                     <div style="background-color: rgb(240, 240, 240);" class="bg-theme padding-40px-all height-100 width-100 border-radius-10">
                         <h4 style="-webkit-text-fill-color: rgba(32, 30, 30, 0.856);" class="text-white text-center margin-10px-bottom">베스킨라빈스 로그인</h4>
                         <p style="-webkit-text-fill-color: rgb(242, 108, 132);" class="text-white text-center opacity8 width-75 xs-width-100 center-col margin-30px-bottom">해피포인트 아이디로 간편하게 로그인하세요.</p>
-                        <form method="post" action="#!">
+                        <!--<form method="post" >-->
                             <input type="hidden" name="form-type" value="contact">
                             <div class="row">
+                                <!-- 아이디와 비밀번호를 inputId와 inputPw로 입력받아요 -->
                                 <div class="col-md-12">
-                                    <input type="text" class="border-radius-5" name="input_id" placeholder="아이디를 입력하세요" data-constraints="@Email @NotEmpty">
+                                    <input id="inputId" type="text" class="border-radius-5" name="inputId" placeholder="아이디를 입력하세요" >
                                 </div>
                                 <div class="col-md-12">
-                                    <input type="text" class="border-radius-5" placeholder="비밀번호를 입력하세요" data-constraints="@NotEmpty"></input>
+                                    <input id="inputPw" type="text" class="border-radius-5" placeholder="비밀번호를 입력하세요" ></input>
                                 </div>
 
                                 <div style="-webkit-text-fill-color:rgb(242, 108, 132); margin-left: 20px;">
@@ -216,10 +261,10 @@
                                 </div>
 
                                 <div class="mfControls col-md-12">
-                                    <button style="background-color: rgb(242, 108, 132); margin-left: 150px; margin-top: 15px;" type="submit" class="butn no-margin-bottom">Login</button>
+                                    <button id="loginButton" style="background-color: rgb(242, 108, 132); margin-left: 150px; margin-top: 15px;" type="button" class="butn no-margin-bottom">Login</button>
                                 </div>
                             </div>
-                        </form>
+                         <!--</form>-->
                     </div>
                 </div>
                 <div class="col-lg-6">
