@@ -5,6 +5,46 @@
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            //유저 로그인 세션값 유뮤에 따라 상단바 메뉴가 달라집니다.
+            $('#userMenu').hide();
+            $('#adminSessionView').hide();
+            var userIdSession = null;
+
+            // 실제 세션
+            if(localStorage.getItem("userid") != null){
+                userIdSession = localStorage.getItem("userid");
+            };
+
+
+            if(userIdSession == 'admin'){        //관리자 아이디일때
+                $('#noSessionView').hide();
+                $('#userMenu').hide();
+                $('#adminSessionView').show();
+            }else if(userIdSession !== null){   //아이디 세션이 있을 때
+                $('#noSessionView').hide();
+                $('#userMenu').show();
+                $('#adminSessionView').hide();
+                $('#sessionId').html(userIdSession+'님 환영합니다.')
+            }else{
+                $('#noSessionView').show();     //아이디 세션이 없을 때
+                $('#userMenu').hide();
+                $('#adminSessionView').hide();
+            };
+
+            //회원 탈퇴 버튼 눌렀을 때
+            $("#quitButton").click(function(){
+
+                prompt('비밀번호를 입력하세요');
+
+            });
+
+        });
+
+    </script>
 
     <!-- ajax script -->
     <script>

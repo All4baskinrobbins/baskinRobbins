@@ -22,7 +22,7 @@ public class Product {
 
     private String name;
 
-    private String enName;
+    private String en_name;
     private Long category_Id;
     private String description;
     private int kcal;

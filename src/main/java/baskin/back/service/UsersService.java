@@ -65,8 +65,6 @@ public class UsersService {
         }
     }
 
-
-
     // 비밀번호 암호화
     private String hashedPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());

@@ -2,58 +2,169 @@
 <html lang="en">
 
 <head>
-
+    <link rel="stylesheet" href="css/modal.css" />
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-
-    <!-- ajax script -->
-     <!-- <script src="join.js"></script>  이건 왜 안되지!???!?ㅉ?-->
     <script>
 
-    $(document).ready(function () {    
-        $("#joinButton").click(function(){
+        const regexpForId = new RegExp("[a-zA-Z0-9]]{4,12}");
+        const regexpForPassword = new RegExp("[a-zA-Z0-9]]{8,12}");
+        const regexForEmail = new RegExp("[a-z0-9]+@[a-z]+\.[a-z]{2,3}");
 
-            // json 형식으로 데이터 set
-            var params = {
 
-                      name         : $("#inputName").val()
-                    , userid      : $("#inputId").val()
-                    , userpw      : $("#inputPw").val()
-                    , birth        : $("#inputBirth").val()
-                    , email        : $("#inputMail").val()
-                    , phonenumber : $("#inputPhoneNum").val()
+
+        $(document).ready(function () {
+
+            //유저 로그인 세션값 유뮤에 따라 상단바 메뉴가 달라집니다.
+            $('#userMenu').hide();
+            $('#adminSessionView').hide();
+            var userIdSession = null;
+
+
+
+            // 실제 세션
+            if(localStorage.getItem("userid") != null){
+                userIdSession = localStorage.getItem("userid");
+            };
+
+            if(userIdSession == 'admin'){        //관리자 아이디일때
+                $('#noSessionView').hide();
+                $('#userMenu').hide();
+                $('#adminSessionView').show();
+            }else if(userIdSession !== null){   //아이디 세션이 있을 때
+                $('#noSessionView').hide();
+                $('#userMenu').show();
+                $('#adminSessionView').hide();
+                $('#sessionId').html(userIdSession+'님 환영합니다.')
+            }else{
+                $('#noSessionView').show();     //아이디 세션이 없을 때
+                $('#userMenu').hide();
+                $('#adminSessionView').hide();
+            };
+            //회원 탈퇴 버튼 눌렀을 때
+            $("#quitButton").click(function(){
+                prompt('비밀번호를 입력하세요');
+            });
+        });
+
+    </script>
+
+    <script>
+
+    $(document).ready(function () {
+        let modal_body = document.querySelector('.modal_body');
+        let modal_content = document.querySelector('#modal_content');
+
+
+            function onClick() {
+                document.querySelector('.modal_wrap').style.display ='block';
+                document.body.style.overflow = "hidden";
+                document.querySelector('.black_bg').style.display ='block';
             }
-                
-            // ajax 통신
+            function offClick() {
+                document.querySelector('.modal_wrap').style.display ='none';
+                document.body.style.overflow = "unset";
+                document.querySelector('.black_bg').style.display ='none';
+            }
+
+            document.querySelector('.modal_btn').addEventListener('click', onClick);
+            document.querySelector('.modal_close').addEventListener('click', offClick);
+
+
+
+        $("#button_duplicate_id").click(function() {
+            let check_duplicate = {
+                    userid : $("#inputId").val()
+            }
+
+            let modal_content = $("#modal_content");
+
             $.ajax({
-                type : "POST",           
-                url : "/users/signUp",       // 컨트롤러에서 대기중인 URL 주소이다.
-                data: JSON.stringify(params),                        // http 의 body데이터를 의미 -> 이걸 해주면 리턴이 문자열로된다.   
-                contentType : "application/json",                      
-                dataType : "JSON", //요청해서 서버에서 응답이 왔을때 모든것이 문자열 => 자바스크립트로 읽힘 datatype "jsonp" get방식일때만 사용 가능 / 보낼 때 CORS에 대한 처리가 백단에서 되어있어야함
-                async    : true,
-                
-                success : function(res){ // 비동기통신의 성공일경우 success콜백으로 들어옵니다. 'res'는 응답받은 데이터이다.
+                type : "POST",
+                url : "/users/existUser",
+                data : JSON.stringify(check_duplicate),
+                dataType : "JSON",
+                contentType : "application/json",
+                async : true,
 
+                success : function(res) {
+                    if(res){
+                        modal_content.empty();
+                        modal_content.append(`<span>중복된 아이디입니다.<span>`);
+                    } else {
+                        modal_content.empty();
+                        modal_content.append(`<span>사용 가능한 아이디입니다.<span>`);
 
-                    // 응답코드 > 0000
-                    //alert(res.code);
-                    alert("회원가입이 완료되었습니다.");
-                    location.href = "index.html";
+                    }
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown){ // 비동기 통신이 실패할경우 error 콜백으로 들어옵니다.
                     alert("통신 실패.")
                 }
-            });
+            })
+        })
+        $("#joinButton").click(function(){
+
+            let name = $("#inputName").val();
+            let userid = $("#inputId").val();
+            let userpw = $("#inputPw").val();
+            let birth = $("#inputYear").val() + $("#inputMonth").val() + $("#inputDay").val()
+            let email = $("#inputMail").val();
+            let phonenumber = $("#inputPhoneNum").val();
+            // json 형식으로 데이터 set
+            var params = {
+
+                      name         : name
+                    , userid      : userid
+                    , userpw      : userpw
+                    , birth        : birth
+                    , email        : email
+                    , phonenumber : phonenumber
+            }
+
+            if(!regexpForId.test(userid)) {
+                modal_content.empty();
+                modal_content.append(`<span>아이디는 영어 대소문자, 숫자를 이용하여 4자 이상 12자 이하로 적어주세요<span>`);
+                $("#inputId").empty();
+                $("#inputId").focus();
+            } else if (!regexpForPassword.test(userpw)){
+                modal_content.empty();
+                modal_content.append(`<span>비밀번호는 영어 대소문자, 숫자를 이용하여 8자 이상 12자 이하로 적어주세요<span>`);
+                $("#inputPw").empty();
+                $("#inputPw").focus();
+            } else if ($("#inputYear").val() > 2023 || $("#inputYear").val() < 1900) {
+                modal_content.empty();
+                modal_content.append(`<span>올바르지 않은 생년월일입니다.<span>`);
+                $("#inputYear").empty();
+                $("#inputYear").focus();
+            } else if(!regexForEmail.test(email)) {
+                modal_content.empty();
+                modal_content.append(`<span>올바르지 않은 이메일입니다.<span>`);
+                $("#inputMail").empty();
+                $("#inputMail").focus();
+            } else {
+                // ajax 통신
+                $.ajax({
+                    type : "POST",
+                    url : "/users/signUp",       // 컨트롤러에서 대기중인 URL 주소이다.
+                    data: JSON.stringify(params),                        // http 의 body데이터를 의미 -> 이걸 해주면 리턴이 문자열로된다.
+                    contentType : "application/json",
+                    dataType : "JSON", //요청해서 서버에서 응답이 왔을때 모든것이 문자열 => 자바스크립트로 읽힘 datatype "jsonp" get방식일때만 사용 가능 / 보낼 때 CORS에 대한 처리가 백단에서 되어있어야함
+                    async    : true,
+                    success : function(res){ // 비동기통신의 성공일경우 success콜백으로 들어옵니다. 'res'는 응답받은 데이터이다.
+                        // 응답코드 > 0000
+                        alert("회원가입이 완료되었습니다.");
+                        location.href = "index.html";
+                    },
+                    error : function(XMLHttpRequest, textStatus, errorThrown){ // 비동기 통신이 실패할경우 error 콜백으로 들어옵니다.
+                        alert("통신 실패.")
+                    }
+                });
+            }
         });
-            
     });
 
 
     </script>
-
-
-
     <!-- metas -->
     <meta charset="utf-8">
     <meta name="author" content="Chitrakoot Web" />
@@ -99,22 +210,22 @@
 
     <!-- start main-wrapper section -->
     <div class="main-wrapper">
-
         <!-- start header section -->
         <header>
-
             <div id="top-bar" class="top-bar" style="background-color:rgb(242, 108, 132);">
                 <div class="container lg-container">
                     <div class="row">
                         <div class="col-md-9">
                             <div class="top-bar-info">
                                 <ul>
-                                    <li><i class="fas fa-phone"></i>TEL : 080-555-3131</li>
+                                    <!-- 로그인한 유저 이름 -->
+                                    <li><span style="margin-left: 20px; font-weight: bold;" id="sessionId"> </span></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-3 xs-display-none">
                             <ul class="top-social-icon">
+                                <li><span style="color: white; font-weight: bold;">TEL : 080-555-3131 </span></li>
                                 <li><a href="javascript:void(0)"><i class="fab fa-facebook-f"></i></a></li>
                                 <li><a href="javascript:void(0)"><i class="fab fa-twitter"></i></a></li>
                                 <li><a href="javascript:void(0)"><i class="fab fa-pinterest-p"></i></a></li>
@@ -143,23 +254,48 @@
                 </div>
                 <!-- end top search -->
 
+                <div class="modal">
+                    <div class="modal_body">Modal</div>
+                </div>
+
+
                 <div class="container lg-container">
                     <div class="row align-items-center">
                         <div class="col-12 col-lg-12">
                             <div class="menu_area alt-font">
                                 <nav class="navbar navbar-expand-lg navbar-light no-padding">
 
-                                    <div style="margin-right: 50px;">
-                                        <ul class="navbar-nav ml-auto" id="nav" style="display: none;">
+                                    <!-- 여기서 if문으로 userIdSession값 유무에따라 다른 버튼을 보여줄거예요 -->
+                                    <div id="noSessionView" style="margin-right: 50px;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
                                             <li><a href="login.html">Login</a></li>
                                             <li><a href="join.html">Join</a></li>
                                         </ul>
                                     </div>
-                                    
 
-                                    <div style="margin-left: 240px;" class="navbar-header navbar-header-custom">
+                                    <div id="adminSessionView" style="margin-right: 50px;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
+                                            <li><a href="logout.html">Logout</a></li>
+                                            <li><a href="userInfo.html">관리자 메뉴</a></li>
+                                        </ul>
+                                    </div>
+
+                                    <div id="userMenu" style="margin-right: 50px;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
+                                            <li><a href="#">MyPage</a>
+                                                <ul>
+                                                    <li><a href="update.html">회원 정보 수정</a></li>
+                                                    <li><a id="quitButton" href="#">회원 탈퇴</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="logout.html">Logout</a></li>
+                                        </ul>
+                                    </div>
+
+
+                                    <div style="margin-left: 180px;" class="navbar-header navbar-header-custom">
                                         <!-- start logo -->
-                                        <a href="index.html" class="navbar-brand"><img id="logo" src="img/logos/baskin_robbins_long_logo.png" alt="logo"></a>
+                                        <a href="index.html" class="navbar-brand"><img src="img/logos/baskin_robbins_long_logo.png" alt="logo"></a>
                                         <!-- end logo -->
                                     </div>
 
@@ -167,32 +303,32 @@
 
                                     <!-- menu area -->
                                     <ul class="navbar-nav ml-auto" id="nav" style="display: none;">
-                                        
+
                                         <li><a href="#">MENU</a>
                                             <ul>
-                                                <li><a href="demo-1.html">아이스크림</a></li>
-                                                <li><a href="demo-2.html">음료</a></li>
-                                                <li><a href="demo-3.html">디저트</a></li>
+                                                <li><a href="icecream.html">아이스크림</a></li>
+                                                <li><a href="beverage.html">음료</a></li>
+                                                <li><a href="dessert.html">디저트</a></li>
 
                                             </ul>
                                         </li>
-                                        
+
                                         <li><a href="#">성분 및 알레르기</a>
                                             <ul>
-                                                <li><a href="portfolio.html">아이스크림</a></li>
-                                                <li><a href="portfolio-style-2.html">음료</a></li>
+                                                <li><a href="searchAllergy.html">아이스크림</a></li>
+                                                <li><a href="searchAllergy2.html">음료</a></li>
                                             </ul>
                                         </li>
-                                       
+
                                         <li><a href="#">STORE</a>
                                             <ul>
-                                                <li><a href="shop-product-grid.html">매장 찾기</a></li>
-                                                <li><a href="product-grid-3-column.html">고객 센터</a></li>
+                                                <li><a href="location.html">매장 찾기</a></li>
+                                                <li><a href="service.html">고객 센터</a></li>
                                             </ul>
                                         </li>
-                                       
-                                        
-                                        
+
+
+
                                     </ul>
                                     <!-- end menu area -->
 
@@ -248,7 +384,7 @@
                 <div class="col-lg-10 sm-margin-30px-bottom">
                     <div style="background-color: rgb(240, 240, 240);" class="bg-theme padding-40px-all height-100 width-100 border-radius-10">
                         
-                        <img style="margin-top: 20px; margin-bottom: 20px;" id="logo" src="img/logos/baskin_robbins_long_logo.png" alt="logo">
+                        <img style="margin-top: 20px; margin-bottom: 20px;" src="img/logos/baskin_robbins_long_logo.png" alt="logo">
                         
                         <h4 style="-webkit-text-fill-color: rgba(32, 30, 30, 0.856);" class="text-white text-center margin-10px-bottom">베스킨라빈스 회원가입</h4>
                         <p style="-webkit-text-fill-color: rgb(242, 108, 132);" class="text-white text-center opacity8 width-75 xs-width-100 center-col margin-30px-bottom">해피포인트 아이디로 간편하게 로그인하세요.</p>
@@ -264,7 +400,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <button style="margin-left: 30px; background-color: rgb(242, 108, 132); " 
-                                                type="submit" class="butn no-margin-bottom">중복 검사</button>
+                                                type="button" id="button_duplicate_id" class="butn no-margin-bottom modal_btn">중복 검사</button>
                                             </div>
                                         </div>
     
@@ -281,20 +417,59 @@
                                         <div class="row">
 
                                             <div class="col-4">
-                                                <input id="inputBirth" type="text" placeholder="출생 년도">
+                                                <input id="inputYear" type="text" placeholder="출생 년도">
                                             </div>
 
                                             <div class="col-4">
-                                                <select>
-                                                    <option>월</option>                                                        
-                                                    <option>열량</option>                                                        
+                                                <select id = "inputMonth">
+                                                    <option>1월</option>
+                                                    <option>2월</option>
+                                                    <option>3월</option>
+                                                    <option>4월</option>
+                                                    <option>5월</option>
+                                                    <option>6월</option>
+                                                    <option>7월</option>
+                                                    <option>8월</option>
+                                                    <option>9월</option>
+                                                    <option>10월</option>
+                                                    <option>11월</option>
+                                                    <option>12월</option>
                                                 </select>
                                             </div>
 
                                             <div class="col-4">
-                                                <select>
-                                                    <option>일</option>                                                        
-                                                    <option>높은순</option>                                                                                                    
+                                                <select id = "inputDay">
+                                                    <option>1일</option>
+                                                    <option>2일</option>
+                                                    <option>3일</option>
+                                                    <option>4일</option>
+                                                    <option>5일</option>
+                                                    <option>6일</option>
+                                                    <option>7일</option>
+                                                    <option>8일</option>
+                                                    <option>9일</option>
+                                                    <option>10일</option>
+                                                    <option>11일</option>
+                                                    <option>12일</option>
+                                                    <option>13일</option>
+                                                    <option>14일</option>
+                                                    <option>15일</option>
+                                                    <option>16일</option>
+                                                    <option>17일</option>
+                                                    <option>18일</option>
+                                                    <option>19일</option>
+                                                    <option>20일</option>
+                                                    <option>21일</option>
+                                                    <option>22일</option>
+                                                    <option>23일</option>
+                                                    <option>24일</option>
+                                                    <option>25일</option>
+                                                    <option>26일</option>
+                                                    <option>27일</option>
+                                                    <option>28일</option>
+                                                    <option>29일</option>
+                                                    <option>30일</option>
+                                                    <option>31일</option>
                                                 </select>
                                             </div>
 
@@ -310,7 +485,7 @@
                                 <form id="aa" name = "aa" method="post">
                                     <div class="mfControls col-md-12">
                                     <button id="joinButton" style="background-color: rgb(242, 108, 132); margin-left: 370px; margin-top: 15px;" 
-                                    type="button" class="butn no-margin-bottom">JOIN</button>
+                                    type="button" class="butn no-margin-bottom modal_btn">JOIN</button>
                                     </div>
                                 </form>
                             </div>
@@ -466,6 +641,17 @@
     <script src="js/main.js"></script>
 
     <!-- all js include end -->
+
+    <div class="black_bg"></div>
+    <div class="modal_wrap">
+        <div class="modal_close"><a href="#">close</a></div>
+        <div class ="modal_bg">알  람
+        </div>
+        <div class ="modal_body">
+            <span id = "modal_content" class = "text-center opacity8 width-75 xs-width-100 center-col"></span>
+        </div>
+    </div>
+
 
 </body>
 

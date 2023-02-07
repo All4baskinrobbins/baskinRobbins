@@ -3,6 +3,47 @@
 <head>
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 	<script>
+
+		$(document).ready(function () {
+
+			//유저 로그인 세션값 유뮤에 따라 상단바 메뉴가 달라집니다.
+			$('#userMenu').hide();
+			$('#adminSessionView').hide();
+			var userIdSession = null;
+
+			// 실제 세션
+			if(localStorage.getItem("userid") != null){
+				userIdSession = localStorage.getItem("userid");
+			}
+
+
+			if(userIdSession === 'admin'){        //관리자 아이디일때
+				$('#noSessionView').hide();
+				$('#userMenu').hide();
+				$('#adminSessionView').show();
+			}else if(userIdSession !== null){   //아이디 세션이 있을 때
+				$('#noSessionView').hide();
+				$('#userMenu').show();
+				$('#adminSessionView').hide();
+				$('#sessionId').html(userIdSession+'님 환영합니다.')
+			}else{
+				$('#noSessionView').show();     //아이디 세션이 없을 때
+				$('#userMenu').hide();
+				$('#adminSessionView').hide();
+			}
+
+			//회원 탈퇴 버튼 눌렀을 때
+			$("#quitButton").click(function(){
+
+				prompt('비밀번호를 입력하세요');
+
+			});
+
+		});
+
+	</script>
+
+	<script>
 		$(document).ready(function() {
 
 			$.ajax({
@@ -85,19 +126,23 @@
 					  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<!-- End Google Tag Manager (noscript) -->
 
-	<header id="header">
+	<!-- start header section -->
+	<header>
+
 		<div id="top-bar" class="top-bar" style="background-color:rgb(242, 108, 132);">
 			<div class="container lg-container">
 				<div class="row">
 					<div class="col-md-9">
 						<div class="top-bar-info">
 							<ul>
-								<li><i class="fas fa-phone"></i>TEL : 080-555-3131</li>
+								<!-- 로그인한 유저 이름 -->
+								<li><span style="margin-left: 20px; font-weight: bold;" id="sessionId"> </span></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-xs-12 col-md-3 xs-display-none">
 						<ul class="top-social-icon">
+							<li><span style="color: white; font-weight: bold;">TEL : 080-555-3131 </span></li>
 							<li><a href="javascript:void(0)"><i class="fab fa-facebook-f"></i></a></li>
 							<li><a href="javascript:void(0)"><i class="fab fa-twitter"></i></a></li>
 							<li><a href="javascript:void(0)"><i class="fab fa-pinterest-p"></i></a></li>
@@ -115,9 +160,9 @@
 				<div class="container lg-container">
 					<form class="search-form" action="search.html" method="GET" accept-charset="utf-8">
 						<div class="input-group">
-						<span class="input-group-addon cursor-pointer">
-							<button class="search-form_submit fas fa-search font-size18 text-white" type="submit"></button>
-						</span>
+                                <span class="input-group-addon cursor-pointer">
+                                    <button class="search-form_submit fas fa-search font-size18 text-white" type="submit"></button>
+                                </span>
 							<input type="text" class="search-form_input form-control" name="s" autocomplete="off" placeholder="Type & hit enter...">
 							<span class="input-group-addon close-search"><i class="fas fa-times font-size18 line-height-28 margin-5px-top"></i></span>
 						</div>
@@ -132,15 +177,35 @@
 						<div class="menu_area alt-font">
 							<nav class="navbar navbar-expand-lg navbar-light no-padding">
 
-								<div style="margin-right: 50px;">
+								<!-- 여기서 if문으로 userIdSession값 유무에따라 다른 버튼을 보여줄거예요 -->
+								<div id="noSessionView" style="margin-right: 50px;">
 									<ul class="navbar-nav ml-auto" style="display: none;">
 										<li><a href="login.html">Login</a></li>
-										<li><a href="#">Join</a></li>
+										<li><a href="join.html">Join</a></li>
+									</ul>
+								</div>
+
+								<div id="adminSessionView" style="margin-right: 50px;">
+									<ul class="navbar-nav ml-auto" style="display: none;">
+										<li><a href="logout.html">Logout</a></li>
+										<li><a href="userInfo.html">관리자 메뉴</a></li>
+									</ul>
+								</div>
+
+								<div id="userMenu" style="margin-right: 50px;">
+									<ul class="navbar-nav ml-auto" style="display: none;">
+										<li><a href="#">MyPage</a>
+											<ul>
+												<li><a href="update.html">회원 정보 수정</a></li>
+												<li><a id="quitButton" href="#">회원 탈퇴</a></li>
+											</ul>
+										</li>
+										<li><a href="logout.html">Logout</a></li>
 									</ul>
 								</div>
 
 
-								<div style="margin-left: 100px;" class="navbar-header navbar-header-custom">
+								<div style="margin-left: 180px;" class="navbar-header navbar-header-custom">
 									<!-- start logo -->
 									<a href="index.html" class="navbar-brand"><img id="logo" src="img/logos/baskin_robbins_long_logo.png" alt="logo"></a>
 									<!-- end logo -->
@@ -149,46 +214,80 @@
 								<div class="navbar-toggler"></div>
 
 								<!-- menu area -->
-								<ul class="navbar-nav ml-auto" style="display: none;">
+								<ul class="navbar-nav ml-auto" id="nav" style="display: none;">
 
 									<li><a href="#">MENU</a>
 										<ul>
 											<li><a href="icecream.html">아이스크림</a></li>
 											<li><a href="beverage.html">음료</a></li>
 											<li><a href="dessert.html">디저트</a></li>
+
 										</ul>
 									</li>
 
 									<li><a href="#">성분 및 알레르기</a>
 										<ul>
-											<li><a href="portfolio.html">아이스크림</a></li>
-											<li><a href="portfolio-style-2.html">음료</a></li>
+											<li><a href="searchAllergy.html">아이스크림</a></li>
+											<li><a href="searchAllergy2.html">음료</a></li>
 										</ul>
 									</li>
 
 									<li><a href="#">STORE</a>
 										<ul>
-											<li><a href="shop-product-grid.html">매장 찾기</a></li>
-											<li><a href="product-grid-3-column.html">고객 센터</a></li>
+											<li><a href="location.html">매장 찾기</a></li>
+											<li><a href="service.html">고객 센터</a></li>
 										</ul>
 									</li>
-									<li><a href="#">ABOUT</a>
-										<ul>
-											<li><a href="shop-product-grid.html">공지사항</a></li>
-											<li><a href="product-grid-3-column.html">보도자료</a></li>
-										</ul>
-									</li>
+
 
 
 								</ul>
 								<!-- end menu area -->
+
+								<!-- start atribute navigation -->
+								<div class="attr-nav sm-no-margin sm-margin-70px-right xs-margin-65px-right">
+									<ul>
+										<li class="dropdown sm-margin-20px-right">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+												<i class="fas fa-shopping-cart"></i>
+												<span class="badge bg-theme">3</span>
+											</a>
+											<ul class="dropdown-menu cart-list">
+												<li>
+													<a href="#" class="photo"><img src="img/shop/cart-thumb01.jpg" class="cart-thumb" alt="" /></a>
+													<h6><a href="#">Meats biscuits </a></h6>
+													<p>2x - <span class="price">$99.99</span></p>
+												</li>
+												<li>
+													<a href="#" class="photo"><img src="img/shop/cart-thumb02.jpg" class="cart-thumb" alt="" /></a>
+													<h6><a href="#">Dog toys</a></h6>
+													<p>1x - <span class="price">$33.33</span></p>
+												</li>
+												<li>
+													<a href="#" class="photo"><img src="img/shop/cart-thumb03.jpg" class="cart-thumb" alt="" /></a>
+													<h6><a href="#">Fancy collar</a></h6>
+													<p>2x - <span class="price">$99.99</span></p>
+												</li>
+												<li class="total bg-theme">
+													<span class="pull-left"><strong>Total</strong>: $233.31</span>
+													<a href="#" class="butn small btn-cart white"><span>View Cart</span></a>
+												</li>
+											</ul>
+										</li>
+										<li class="search"><a href="javascript:void(0)"><i class="fas fa-search"></i></a></li>
+									</ul>
+								</div>
+								<!-- end atribute navigation -->
+
 							</nav>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
 	</header>
+	<!-- end header section -->
 
 	<article class="container">
 

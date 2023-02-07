@@ -403,14 +403,14 @@ select::-ms-expand {border:0; background-color:transparent;}
 .best_icecream .list_wrap ul:after {display:table; clear:both; content:"";}
 .best_icecream .list_wrap li {float:left; width:218px; text-align:center;}
 .best_icecream .list_wrap a {display:block; margin:0 27px;}
-.best_icecream .list_wrap .img {position:relative; width:164px; height:164px; margin:5px 0 7px; border-radius:82px; background:#f4f4f4 url(/assets/images/menu/bg_icecream_corn_4.png) 50% 100% no-repeat; background-size:40px auto; text-align:center; line-height:82px;}
-.best_icecream .list_wrap .img:before {position:absolute; top:-5px; left:50%; width:31px; height:38px; margin:0px 0 0 -15px; background:url(/assets/images/menu/icon_rank_4.png) no-repeat; content:"";}
+.best_icecream .list_wrap .img {position:relative; width:164px; height:164px; margin:5px 0 7px; border-radius:82px; background:#f4f4f4 url('../img/icecream/bg_icecream_corn_4.png') 50% 100% no-repeat; background-size:40px auto; text-align:center; line-height:82px;}
+.best_icecream .list_wrap .img:before {position:absolute; top:-5px; left:50%; width:31px; height:38px; margin:0px 0 0 -15px; background:url('../img/icecream/icon_rank_1.png') no-repeat; content:"";}
 .best_icecream .list_wrap .top0 .img {background-color:#ffe1e7;}
 .best_icecream .list_wrap .top1 .img {background-color:#ffd884;}
 .best_icecream .list_wrap .top2 .img {background-color:#e3d2bd;}
-.best_icecream .list_wrap .top0 .img:before {background-image:url(/assets/images/menu/icon_rank_1.png);}
-.best_icecream .list_wrap .top1 .img:before {background-image:url(/assets/images/menu/icon_rank_2.png);}
-.best_icecream .list_wrap .top2 .img:before {background-image:url(/assets/images/menu/icon_rank_3.png);}
+.best_icecream .list_wrap .top0 .img:before {background-image:url('../img/icecream/icon_rank_1.png');}
+.best_icecream .list_wrap .top1 .img:before {background-image:url('../img/icecream/icon_rank_1.png');}
+.best_icecream .list_wrap .top2 .img:before {background-image:url('../img/icecream/icon_rank_1.png');}
 .best_icecream .list_wrap .img strong {display:inline-block; position:absolute; top:6px; left:68px; width:30px; color:#fff; font-size:11px; font-weight:normal; text-align:center; line-height:11px; letter-spacing:-.01em}
 .best_icecream .list_wrap .img img {width:140px; margin-top:22px;}
 .best_icecream .list_wrap .ice_name {color:#918983;}
@@ -1249,3 +1249,4 @@ select::-ms-expand {border:0; background-color:transparent;}
 #popup210930 .pop_footer > label { position: absolute; bottom: 5px; left: 15px; cursor: pointer; }
 #popup210930 .pop_footer > label input { vertical-align: middle; margin-top: 0; }
 #popup210930 .pop_footer > a { position: absolute; bottom: 5px; right: 20px; }
+

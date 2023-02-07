@@ -6,6 +6,46 @@
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            //유저 로그인 세션값 유뮤에 따라 상단바 메뉴가 달라집니다.
+            $('#userMenu').hide();
+            $('#adminSessionView').hide();
+            var userIdSession = null;
+
+            // 실제 세션
+            if(localStorage.getItem("userid") != null){
+                userIdSession = localStorage.getItem("userid");
+            };
+
+
+            if(userIdSession == 'admin'){        //관리자 아이디일때
+                $('#noSessionView').hide();
+                $('#userMenu').hide();
+                $('#adminSessionView').show();
+            }else if(userIdSession !== null){   //아이디 세션이 있을 때
+                $('#noSessionView').hide();
+                $('#userMenu').show();
+                $('#adminSessionView').hide();
+                $('#sessionId').html(userIdSession+'님 환영합니다.')
+            }else{
+                $('#noSessionView').show();     //아이디 세션이 없을 때
+                $('#userMenu').hide();
+                $('#adminSessionView').hide();
+            };
+
+            //회원 탈퇴 버튼 눌렀을 때
+            $("#quitButton").click(function(){
+
+                prompt('비밀번호를 입력하세요');
+
+            });
+
+        });
+
+    </script>
 
     <!-- 로그인 에이젝스 통신 ajax -->
     <script>
@@ -104,12 +144,14 @@
                         <div class="col-md-9">
                             <div class="top-bar-info">
                                 <ul>
-                                    <li><i class="fas fa-phone"></i>TEL : 080-555-3131</li>
+                                    <!-- 로그인한 유저 이름 -->
+                                    <li><span style="margin-left: 20px; font-weight: bold;" id="sessionId"> </span></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-3 xs-display-none">
                             <ul class="top-social-icon">
+                                <li><span style="color: white; font-weight: bold;">TEL : 080-555-3131 </span></li>
                                 <li><a href="javascript:void(0)"><i class="fab fa-facebook-f"></i></a></li>
                                 <li><a href="javascript:void(0)"><i class="fab fa-twitter"></i></a></li>
                                 <li><a href="javascript:void(0)"><i class="fab fa-pinterest-p"></i></a></li>
@@ -144,15 +186,35 @@
                             <div class="menu_area alt-font">
                                 <nav class="navbar navbar-expand-lg navbar-light no-padding">
 
-                                    <div style="margin-right: 50px;">
-                                        <ul class="navbar-nav ml-auto" id="nav" style="display: none;">
+                                    <!-- 여기서 if문으로 userIdSession값 유무에따라 다른 버튼을 보여줄거예요 -->
+                                    <div id="noSessionView" style="margin-right: 50px;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
                                             <li><a href="login.html">Login</a></li>
                                             <li><a href="join.html">Join</a></li>
                                         </ul>
                                     </div>
-                                    
 
-                                    <div style="margin-left: 240px;" class="navbar-header navbar-header-custom">
+                                    <div id="adminSessionView" style="margin-right: 50px;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
+                                            <li><a href="logout.html">Logout</a></li>
+                                            <li><a href="userInfo.html">관리자 메뉴</a></li>
+                                        </ul>
+                                    </div>
+
+                                    <div id="userMenu" style="margin-right: 50px;">
+                                        <ul class="navbar-nav ml-auto" style="display: none;">
+                                            <li><a href="#">MyPage</a>
+                                                <ul>
+                                                    <li><a href="update.html">회원 정보 수정</a></li>
+                                                    <li><a id="quitButton" href="#">회원 탈퇴</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="logout.html">Logout</a></li>
+                                        </ul>
+                                    </div>
+
+
+                                    <div style="margin-left: 180px;" class="navbar-header navbar-header-custom">
                                         <!-- start logo -->
                                         <a href="index.html" class="navbar-brand"><img id="logo" src="img/logos/baskin_robbins_long_logo.png" alt="logo"></a>
                                         <!-- end logo -->
@@ -162,32 +224,32 @@
 
                                     <!-- menu area -->
                                     <ul class="navbar-nav ml-auto" id="nav" style="display: none;">
-                                        
+
                                         <li><a href="#">MENU</a>
                                             <ul>
-                                                <li><a href="demo-1.html">아이스크림</a></li>
-                                                <li><a href="demo-2.html">음료</a></li>
-                                                <li><a href="demo-3.html">디저트</a></li>
+                                                <li><a href="icecream.html">아이스크림</a></li>
+                                                <li><a href="beverage.html">음료</a></li>
+                                                <li><a href="dessert.html">디저트</a></li>
 
                                             </ul>
                                         </li>
-                                        
+
                                         <li><a href="#">성분 및 알레르기</a>
                                             <ul>
-                                                <li><a href="portfolio.html">아이스크림</a></li>
-                                                <li><a href="portfolio-style-2.html">음료</a></li>
+                                                <li><a href="searchAllergy.html">아이스크림</a></li>
+                                                <li><a href="searchAllergy2.html">음료</a></li>
                                             </ul>
                                         </li>
-                                       
+
                                         <li><a href="#">STORE</a>
                                             <ul>
-                                                <li><a href="shop-product-grid.html">매장 찾기</a></li>
-                                                <li><a href="product-grid-3-column.html">고객 센터</a></li>
+                                                <li><a href="location.html">매장 찾기</a></li>
+                                                <li><a href="service.html">고객 센터</a></li>
                                             </ul>
                                         </li>
-                                       
-                                        
-                                        
+
+
+
                                     </ul>
                                     <!-- end menu area -->
 
