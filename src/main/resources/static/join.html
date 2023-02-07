@@ -107,6 +107,7 @@
             let name = $("#inputName").val();
             let userid = $("#inputId").val();
             let userpw = $("#inputPw").val();
+            let pwCheck = $("#inputPwCheck").val();
             let birth = $("#inputYear").val() + $("#inputMonth").val() + $("#inputDay").val()
             let email = $("#inputMail").val();
             let phonenumber = $("#inputPhoneNum").val();
@@ -131,7 +132,10 @@
                 modal_content.append(`<span>비밀번호는 영어 대소문자, 숫자를 이용하여 8자 이상 12자 이하로 적어주세요<span>`);
                 $("#inputPw").empty();
                 $("#inputPw").focus();
-            } else if ($("#inputYear").val() > 2023 || $("#inputYear").val() < 1900) {
+            } else if (userpw !== pwCheck) {
+                modal_content.empty();
+                modal_content.append(`<span>비밀번호가 일치하지 않습니다<span>`);
+            }else if ($("#inputYear").val() > 2023 || $("#inputYear").val() < 1900) {
                 modal_content.empty();
                 modal_content.append(`<span>올바르지 않은 생년월일입니다.<span>`);
                 $("#inputYear").empty();
@@ -408,7 +412,7 @@
                                         <input id="inputPw" type="password" class="border-radius-5" name="">
     
                                         <label>비밀번호 재확인</label>
-                                        <input type="password" class="border-radius-5" name="">
+                                        <input id="inputPwCheck" type="password" class="border-radius-5" name="">
     
                                         <label>이름</label>
                                         <input id="inputName" type="text" class="border-radius-5" name="">
